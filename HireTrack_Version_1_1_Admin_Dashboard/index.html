@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HireTrack - latest hiring, fresher jobs, internships and career updates.">
+<title>HireTrack | Jobs & Hiring</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="container nav">
+    <a class="logo" href="#home">Hire<span>Track</span></a>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <nav id="mainNav">
+      <a href="#home">Home</a>
+      <a href="#jobs">Latest Jobs</a>
+      <a href="#categories">Categories</a>
+      <a href="#about">About</a>
+    </nav>
+    <button class="admin-btn" onclick="openAdminLogin()">Admin</button>
+  </div>
+</header>
+
+<main id="publicSite">
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <p class="eyebrow">CAREER OPPORTUNITIES • 2026</p>
+      <h1>Find your next <span>career opportunity.</span></h1>
+      <p class="hero-text">Discover fresher jobs, IT hiring, internships and company recruitment updates in one place.</p>
+      <div class="search-box">
+        <input id="searchInput" type="search" placeholder="Search company, job title, skill..." oninput="renderPublicJobs()">
+        <select id="categoryFilter" onchange="renderPublicJobs()">
+          <option value="All">All Categories</option>
+          <option>Freshers</option><option>IT Jobs</option><option>Internships</option>
+          <option>Testing</option><option>SQL / Database</option>
+        </select>
+        <button onclick="renderPublicJobs()">Search</button>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-stat"><strong id="heroJobCount">0</strong><span>Published posts</span></div>
+      <div class="hero-stat"><strong>5+</strong><span>Job categories</span></div>
+      <div class="hero-stat"><strong>24/7</strong><span>Career updates</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="container section" id="jobs">
+  <div class="section-heading">
+    <div><p class="eyebrow">LATEST OPPORTUNITIES</p><h2>Latest hiring</h2></div>
+    <span id="resultCount" class="result-count"></span>
+  </div>
+  <div id="jobGrid" class="job-grid"></div>
+  <div id="emptyState" class="empty hidden"><h3>No published jobs found</h3><p>Try another search or category.</p></div>
+</section>
+
+<section class="categories section" id="categories">
+  <div class="container">
+    <div class="section-heading"><div><p class="eyebrow">EXPLORE</p><h2>Popular categories</h2></div></div>
+    <div class="category-grid">
+      <button onclick="filterCategory('Freshers')">🎓 <b>Freshers</b><span>Entry-level opportunities</span></button>
+      <button onclick="filterCategory('IT Jobs')">💻 <b>IT Jobs</b><span>Software & technology</span></button>
+      <button onclick="filterCategory('Internships')">🚀 <b>Internships</b><span>Start your career</span></button>
+      <button onclick="filterCategory('Testing')">🧪 <b>Testing</b><span>QA & test engineering</span></button>
+      <button onclick="filterCategory('SQL / Database')">🗄️ <b>SQL / Database</b><span>Database careers</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="container info-section" id="about">
+  <div class="info-card"><p class="eyebrow">ABOUT HIRETRACK</p><h2>Simple job discovery for freshers.</h2><p>HireTrack helps readers discover hiring details, eligibility, skills, salary, location and application information.</p></div>
+  <div class="info-card"><p class="eyebrow">CONTACT</p><h2>Have a hiring update?</h2><p>Email: <a href="mailto:hello@hiretrack.example">hello@hiretrack.example</a></p></div>
+</section>
+</main>
+
+<footer><div class="container footer-content"><div><strong>HireTrack</strong><p>Jobs • Hiring • Careers</p></div><p>© <span id="year"></span> HireTrack</p></div></footer>
+
+<!-- Job details -->
+<div id="jobModal" class="modal hidden" onclick="closeModalBackdrop(event,'jobModal')">
+  <div class="modal-content"><button class="close" onclick="closeJobModal()">×</button><div id="jobDetails"></div></div>
+</div>
+
+<!-- Admin login -->
+<div id="loginModal" class="modal hidden">
+  <div class="modal-content login-card">
+    <button class="close" onclick="closeAdminLogin()">×</button>
+    <div class="login-logo">Hire<span>Track</span></div>
+    <p class="eyebrow">ADMIN PANEL</p>
+    <h2>Sign in</h2>
+    <p class="muted">Demo credentials are shown below for Version 1.1.</p>
+    <form id="loginForm">
+      <label>Username<input id="adminUser" required autocomplete="username"></label>
+      <label>Password<input id="adminPass" type="password" required autocomplete="current-password"></label>
+      <button class="primary full" type="submit">Login to Dashboard</button>
+    </form>
+  </div>
+</div>
+
+<!-- Admin dashboard -->
+<div id="adminPanel" class="admin-panel hidden">
+  <aside class="sidebar">
+    <div class="side-logo">Hire<span>Track</span></div>
+    <button class="side-link active" onclick="showAdminView('dashboard',this)">▦ Dashboard</button>
+    <button class="side-link" onclick="showAdminView('posts',this)">📝 Job Blogs</button>
+    <button class="side-link" onclick="showAdminView('newPost',this)">＋ Add Job Blog</button>
+    <button class="side-link" onclick="showAdminView('settings',this)">⚙ Settings</button>
+    <button class="side-link logout" onclick="logoutAdmin()">↪ Logout</button>
+  </aside>
+  <section class="admin-main">
+    <header class="admin-top">
+      <div><button class="mobile-side" onclick="toggleSidebar()">☰</button><span>Admin Dashboard</span></div>
+      <span class="admin-user">● Admin</span>
+    </header>
+
+    <div id="adminDashboard" class="admin-view">
+      <div class="admin-title"><div><p class="eyebrow">OVERVIEW</p><h1>Dashboard</h1></div><button class="primary" onclick="showAdminView('newPost')">＋ Add Job Blog</button></div>
+      <div class="stats-grid">
+        <div class="stat-card"><span>Total Posts</span><strong id="statTotal">0</strong></div>
+        <div class="stat-card"><span>Published</span><strong id="statPublished">0</strong></div>
+        <div class="stat-card"><span>Drafts</span><strong id="statDrafts">0</strong></div>
+        <div class="stat-card"><span>Categories</span><strong>5</strong></div>
+      </div>
+      <div class="admin-box"><div class="box-head"><h2>Recent job blogs</h2><button class="text-btn" onclick="showAdminView('posts')">View all</button></div><div id="recentPosts"></div></div>
+    </div>
+
+    <div id="adminPosts" class="admin-view hidden">
+      <div class="admin-title"><div><p class="eyebrow">CONTENT</p><h1>Job Blogs</h1></div><button class="primary" onclick="showAdminView('newPost')">＋ Add Job Blog</button></div>
+      <div class="admin-toolbar"><input id="adminSearch" placeholder="Search posts..." oninput="renderAdminPosts()"><select id="adminStatus" onchange="renderAdminPosts()"><option value="All">All Status</option><option value="Published">Published</option><option value="Draft">Draft</option></select></div>
+      <div class="table-wrap"><table><thead><tr><th>Job</th><th>Company</th><th>Category</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead><tbody id="postTable"></tbody></table></div>
+    </div>
+
+    <div id="adminNewPost" class="admin-view hidden">
+      <div class="admin-title"><div><p class="eyebrow">CONTENT EDITOR</p><h1 id="editorTitle">Add Job Blog</h1></div><button class="secondary" onclick="showAdminView('posts')">Cancel</button></div>
+      <form id="postForm" class="editor-form">
+        <input type="hidden" id="postId">
+        <div class="editor-grid">
+          <label>Company Name*<input id="fCompany" required></label>
+          <label>Job Title*<input id="fTitle" required></label>
+          <label>Category*<select id="fCategory" required><option>Freshers</option><option>IT Jobs</option><option>Internships</option><option>Testing</option><option>SQL / Database</option></select></label>
+          <label>Experience*<input id="fExperience" placeholder="0-1 Years" required></label>
+          <label>Qualification*<input id="fQualification" placeholder="B.E / B.Tech / MCA" required></label>
+          <label>Salary<input id="fSalary" placeholder="₹3 - ₹6 LPA"></label>
+          <label>Location<input id="fLocation" placeholder="Pune / Remote"></label>
+          <label>Application URL<input id="fApplyUrl" type="url" placeholder="https://company.com/careers"></label>
+          <label>Company Logo URL<input id="fLogo" type="url" placeholder="https://.../logo.png"></label>
+          <label>Publish Date<input id="fDate" type="date"></label>
+        </div>
+        <label>Skills<input id="fSkills" placeholder="Java, SQL, HTML, CSS"></label>
+        <label>Short Summary*<textarea id="fDescription" rows="3" required placeholder="Briefly explain the opportunity..."></textarea></label>
+        <label>Eligibility / Details<textarea id="fDetails" rows="7" placeholder="Eligibility, responsibilities, selection process, important notes..."></textarea></label>
+        <div class="editor-actions"><button type="button" class="secondary" onclick="savePost('Draft')">Save Draft</button><button type="button" class="primary" onclick="savePost('Published')">Publish Job</button></div>
+      </form>
+    </div>
+
+    <div id="adminSettings" class="admin-view hidden">
+      <div class="admin-title"><div><p class="eyebrow">SETTINGS</p><h1>Website Settings</h1></div></div>
+      <div class="admin-box settings-box">
+        <h2>Version 1.1</h2><p>This demo stores posts in your browser's localStorage. It is not secure for a public production website.</p>
+        <hr><h3>Next upgrade</h3><p>Connect this dashboard to Spring Boot + MySQL for real authentication, database storage, image uploads and publishing from any device.</p>
+        <button class="danger" onclick="resetDemo()">Reset Demo Data</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
